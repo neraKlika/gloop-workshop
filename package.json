@@ -1,0 +1,7 @@
+{
+  "name": "gloop-workshop",
+  "type": "module",
+  "dependencies": {
+    "openai": "^4"
+  }
+}
