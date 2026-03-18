@@ -2,6 +2,8 @@
 
 A fully functional coding agent in ~200 lines of TypeScript. Three files, five tools, one loop. It reads files, navigates projects, writes code, edits existing files, and runs shell commands — the same things production agents do.
 
+![Gloop in action](gloop-screen.png)
+
 ```
 gloop/
 ├── agent.ts   — The harness + agent loop (~80 lines)

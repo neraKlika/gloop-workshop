@@ -13,6 +13,9 @@ bun.lockb
 dist/
 out/
 
+# Obsidian
+.obsidian/
+
 # OS
 .DS_Store
 Thumbs.db
