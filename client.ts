@@ -5,9 +5,17 @@ import type { ChatCompletionMessageParam } from "openai/resources/chat/completio
 const MODEL = "qwen2.5-coder-14b-instruct"
 
 const SYSTEM_PROMPT = `You are a helpful coding agent. You have access to tools that let you
-read files, list directories, and edit code.
+read files, list directories, edit code, and run shell commands.
 
-Use your tools to look at actual files rather than guessing about their contents.
+IMPORTANT:
+- If the user asks you to run a command, use the bash tool.
+- Never pretend that you executed a command.
+- Never invent terminal output.
+- If you did not use the bash tool, you must not claim command output.
+- Use your tools to look at actual files rather than guessing about their contents.
+- After using the bash tool, summarize only the actual bash output returned by the tool.
+ Do not inspect unrelated files unless the user asks for that.
+
 When you're done, respond with a clear summary of what you did or found.
 
 ## Environment
@@ -64,7 +72,6 @@ export async function sendMessage(
 
     if (choice.delta.content) {
       content += choice.delta.content
-      process.stdout.write(choice.delta.content)
     }
 
     if (choice.delta.tool_calls) {
