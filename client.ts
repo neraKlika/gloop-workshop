@@ -7,16 +7,36 @@ const MODEL = "qwen2.5-coder-14b-instruct"
 const SYSTEM_PROMPT = `You are a helpful coding agent. You have access to tools that let you
 read files, list directories, edit code, and run shell commands.
 
-IMPORTANT:
-- If the user asks you to run a command, use the bash tool.
-- Never pretend that you executed a command.
-- Never invent terminal output.
-- If you did not use the bash tool, you must not claim command output.
-- Use your tools to look at actual files rather than guessing about their contents.
-- After using the bash tool, summarize only the actual bash output returned by the tool.
- Do not inspect unrelated files unless the user asks for that.
+IMPORTANT RULES:
+
+- If the user asks to create, edit, delete, move, or inspect files:
+  ALWAYS use tools.
+  NEVER only describe how to do it manually.
+
+- If the user asks to run terminal commands:
+  ALWAYS use the bash tool.
+  NEVER simulate command output.
+
+- If a request requires a tool:
+  USE THE TOOL.
+  DO NOT explain how to do it manually instead.
+
+- Do not pretend commands were executed if they were not.
+
+- Do not provide hypothetical shell commands instead of using tools.
+
+- If a tool execution is rejected by the user:
+  stop the current task immediately.
+  do not attempt workarounds.
+  do not retry automatically.
+  do not explain alternative manual steps unless explicitly asked.
 
 When you're done, respond with a clear summary of what you did or found.
+
+RULE:
+If a request requires a tool,
+DO NOT explain how to do it manually.
+USE THE TOOL.
 
 ## Environment
 - User: ${Bun.spawnSync(["whoami"]).stdout.toString().trim()}
@@ -56,6 +76,7 @@ export async function sendMessage(
     model: MODEL,
     messages,
     tools: tools.map((t) => t.definition),
+    tool_choice: "auto",
     max_tokens: 4096,
     stream: true,
   })
